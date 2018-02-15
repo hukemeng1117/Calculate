@@ -40,7 +40,7 @@ bool popStack(const pStack ps,calNode* pData) {
 	return true;
 }
 
-bool searchStack(IN const pStack ps,IN const calNode data, OUT uint* index) {
+bool searchStack(const pStack ps,const calNode data, uint* index) {
 	ASSERT_RETURN(ps != NULL && index != NULL, false);
 	ASSERT_RETURN(ps->top != NULL && ps->top != ps->bottom,false);
 	pNode tempNode = ps->top;
@@ -57,7 +57,7 @@ bool searchStack(IN const pStack ps,IN const calNode data, OUT uint* index) {
 	return false;
 }
 
-void transferStack(IN const pStack ps,void perform(calNode item) ) {
+void transferStack(const pStack ps,void perform(calNode item) ) {
 	pNode tempNode = ps->top;
 	while(tempNode != ps->bottom) {
 		perform (tempNode->data);

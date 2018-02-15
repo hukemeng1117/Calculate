@@ -1,5 +1,5 @@
-#ifndef _STACK_H_
-#define _STACK_H_
+#ifndef _CAL_STACK_H_
+#define _CAL_STACK_H_
 
 #include "cal_base.h"
 
