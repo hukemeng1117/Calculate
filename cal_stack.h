@@ -23,7 +23,7 @@ bool pushStack(const pStack ps,const calNode data);
 bool popStack(const pStack ps,calNode* pData);
 
 /* search stack, index为返回查找结果*/
-bool searchStack(const pStack ps,const calNode data, uint* index);
+pNode searchStack(const pStack ps,bool condition(pNode node));
 
 void transferStack(const pStack ps,void perform(calNode item) );
 

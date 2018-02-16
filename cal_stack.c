@@ -40,21 +40,21 @@ bool popStack(const pStack ps,calNode* pData) {
 	return true;
 }
 
-bool searchStack(const pStack ps,const calNode data, uint* index) {
-	ASSERT_RETURN(ps != NULL && index != NULL, false);
+pNode searchStack(const pStack ps,int condition(pNode node)) {
+	ASSERT_RETURN(ps != NULL, false);
 	ASSERT_RETURN(ps->top != NULL && ps->top != ps->bottom,false);
 	pNode tempNode = ps->top;
-	
-	uint tempIndex = 0;
+
 	do {
-		if(cal_compare(&(tempNode->data),&data)) {
-			*index = tempIndex;
-			return true;
-		}
-		tempIndex ++;
-		tempNode = tempNode->next;
+        int ret = condition(tempNode);
+        if(ret == CONTINUE)
+            tempNode = tempNode->next;
+        else if(ret == RETURN)
+            return tempNode;
+        else if(ret == BREAK)
+            break;
 	}while(tempNode != NULL && tempNode != ps->bottom);
-	return false;
+	return NULL;
 }
 
 void transferStack(const pStack ps,void perform(calNode item) ) {

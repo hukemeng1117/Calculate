@@ -1,5 +1,6 @@
 #include "cal_decode.h"
 #include "cal_base.h"
+#include "cal_math.h"
 #include <string.h>
 
 CAL_TYPE decodeType(const char c) {
@@ -60,30 +61,34 @@ bool decodeString(const char* string) {
 	
 	ulong maxLength = strlen(string);
 	uint decodeLength = 0;
-	calNode node;
+	calNode data;
 	
 	while(*(string + decodeLength) != '\0') {
 		
-		node.calType = decodeType(string[decodeLength]);
-		ASSERT_RETURN(node.calType != CAL_ERROR, false);
-		
-		if(node.calType == CAL_NUMBER) {
-			node.value = decodeNumber(string + decodeLength, &decodeLength);
-            printf("%f\n",node.value);
+		data.calType = decodeType(string[decodeLength]);
+		ASSERT_RETURN(data.calType != CAL_ERROR, false);
+		if(data.calType == CAL_NUMBER) {
+			data.value = decodeNumber(string + decodeLength, &decodeLength);
 		}
         
-        if(node.calType == CAL_OPERATE) {
-            node.operater = decodeOperator(string + decodeLength, &decodeLength);
-            ASSERT_RETURN(node.operater != OP_ERROR, false);
-            printf("%s\n",getCalOperationDesc(node.operater)->opeDesprition);
+        else if(data.calType == CAL_OPERATE) {
+            data.operater = decodeOperator(string + decodeLength, &decodeLength);
+            ASSERT_RETURN(data.operater != OP_ERROR, false);
         }
         
-        if(node.calType == CAL_BRACKET) {
-            node.bracket = *(string + decodeLength);
+        else if(data.calType == CAL_BRACKET) {
+            data.bracket = *(string + decodeLength);
             decodeLength += 1;
-            printf("%c\n",node.bracket);
+        }
+        if(!mathProcCalNode(&data)) {
+            ASSERT_RETURN(0, false);
         }
 		ASSERT_RETURN(decodeLength <= maxLength, false);
 	}
+    
+    data.calType = CAL_END;
+    if(!mathProcCalNode(&data)) {
+        ASSERT_RETURN(0, false);
+    }
 	return true;
 }

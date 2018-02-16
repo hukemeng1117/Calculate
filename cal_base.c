@@ -41,9 +41,6 @@ bool cal_compare(const calNode* node1,const calNode* node2) {
 	else if(node1->calType == CAL_BRACKET && node1->bracket == node2->bracket) {
 		return true;
 	}
-	else if(node1->calType == CAL_PUNCK && node1->punck == node2->punck) {
-		return true;
-	}
 	return false;
 }
 

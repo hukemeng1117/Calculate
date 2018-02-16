@@ -12,6 +12,10 @@
 #define false 0
 #define true 1
 
+#define CONTINUE 0
+#define BREAK 1
+#define RETURN 2
+
 #define ASSERT_RETURN(condition) \
 do { \
 	if(!(condition)) {\
@@ -32,7 +36,7 @@ typedef enum _CAL_TYPE{
 	CAL_NUMBER,   //数值
 	CAL_OPERATE,  // 运算符
 	CAL_BRACKET,  // 括号符
-	CAL_PUNCK,   // 标点符
+	CAL_END,   // 结束符
 	CAL_ERROR,  //错误码
 }CAL_TYPE;
 
