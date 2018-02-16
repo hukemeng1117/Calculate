@@ -11,5 +11,6 @@
 #include "cal_base.h"
 
 bool decodeString(const char* string);
+bool decodeResult(double* result);
 
 #endif /* cal_decode_h */

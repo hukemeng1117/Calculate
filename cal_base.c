@@ -1,6 +1,12 @@
 #include "cal_base.h"
 #include <string.h>
 
+/*运算等级
+ 1:  +-
+ 2:  * /
+ 3:  %^
+ 4:  函数运算
+*/
 cal_operater_node g_calOperationList[OP_ERROR] = {
     {
         1,  "+",
@@ -20,6 +26,15 @@ cal_operater_node g_calOperationList[OP_ERROR] = {
     {
         3,  "%",
     },
+    {
+        4,  "sin",
+    },
+    {
+        4,  "cos",
+    },
+    {
+        4,  "tan"
+    }
 };
 
 

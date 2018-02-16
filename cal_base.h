@@ -16,13 +16,15 @@
 #define BREAK 1
 #define RETURN 2
 
-#define ASSERT_RETURN(condition) \
-do { \
-	if(!(condition)) {\
-		printf("%s [%s : %d]\r\n",__FUNCTION__,__FILE__,__LINE__); \
-		return;\
-	}\
-}while(0) \
+#define MATH_PI 3.1415926
+
+//#define ASSERT_RETURN(condition) \
+//do { \
+//    if(!(condition)) {\
+//        printf("%s [%s : %d]\r\n",__FUNCTION__,__FILE__,__LINE__); \
+//        return;\
+//    }\
+//}while(0) \
 
 #define ASSERT_RETURN(condition,value) \
 do { \
@@ -47,6 +49,9 @@ typedef enum _cal_operater_type {
     OP_DIVISE,
     OP_INVOLUTION,
     OP_MOD,
+    OP_SIN,
+    OP_COS,
+    OP_TAN,
     
     OP_ERROR,
 }CAL_OPERATOR_TYPE;

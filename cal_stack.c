@@ -40,9 +40,35 @@ bool popStack(const pStack ps,calNode* pData) {
 	return true;
 }
 
+ulong getStackDepth(const pStack ps) {
+    ASSERT_RETURN(ps != NULL, false);
+    ASSERT_RETURN(ps->top != NULL,false);
+    pNode tempNode = ps->top;
+    ulong length = 0;
+    
+    while(tempNode != NULL && tempNode != ps->bottom) {
+        length ++;
+        tempNode = tempNode->next;
+    }
+    return length;
+}
+
+bool clearStack(const pStack ps) {
+    ASSERT_RETURN(ps != NULL, false);
+    ASSERT_RETURN(ps->top != NULL,false);
+    pNode tempNode = ps->top;
+    
+    while(tempNode != NULL && tempNode != ps->bottom) {
+        ps->top = ps->top->next;
+        free(tempNode);
+        tempNode = ps->top;
+    }
+    return true;
+}
+
 pNode searchStack(const pStack ps,int condition(pNode node)) {
 	ASSERT_RETURN(ps != NULL, false);
-	ASSERT_RETURN(ps->top != NULL && ps->top != ps->bottom,false);
+	ASSERT_RETURN(ps->top != NULL,false);
 	pNode tempNode = ps->top;
 
 	do {

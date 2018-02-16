@@ -92,3 +92,9 @@ bool decodeString(const char* string) {
     }
 	return true;
 }
+
+bool decodeResult(double* result) {
+    ASSERT_RETURN(mathGetValue(result), false);
+    return true;
+}
+
