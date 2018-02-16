@@ -1,6 +1,7 @@
 #include "cal_base.h"
 #include "cal_stack.h"
 #include <stdlib.h>
+#include <assert.h>
 
 pStack initStack(void) {
 	pStack ps;
@@ -8,7 +9,8 @@ pStack initStack(void) {
 		ASSERT_RETURN(0,NULL);
 	}
 	if((ps->bottom = (pNode)malloc(sizeof(struct _stackNode))) == NULL) {
-		ASSERT_RETURN(0,NULL);
+        ps->bottom->next = NULL;
+        ASSERT_RETURN(0,NULL);
 	}
 	ps->top = ps->bottom;
 	return ps;
@@ -16,12 +18,12 @@ pStack initStack(void) {
 
 bool pushStack(const pStack ps,const calNode data) {
 	ASSERT_RETURN(ps != NULL,false);
-	
+    
 	pNode tempNode = (pNode)malloc(sizeof(struct _stackNode));
 	ASSERT_RETURN(tempNode != NULL,false);
 	tempNode->next = ps->top;
 	tempNode->data = data;
-	
+    
 	ps->top = tempNode;
 	return true;
 }
@@ -71,7 +73,7 @@ pNode searchStack(const pStack ps,int condition(pNode node)) {
 	ASSERT_RETURN(ps->top != NULL,false);
 	pNode tempNode = ps->top;
 
-	do {
+    while(tempNode != NULL && tempNode != ps->bottom) {
         int ret = condition(tempNode);
         if(ret == CONTINUE)
             tempNode = tempNode->next;
@@ -79,7 +81,7 @@ pNode searchStack(const pStack ps,int condition(pNode node)) {
             return tempNode;
         else if(ret == BREAK)
             break;
-	}while(tempNode != NULL && tempNode != ps->bottom);
+    }
 	return NULL;
 }
 

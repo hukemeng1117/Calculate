@@ -4,7 +4,6 @@
 #include <stdio.h>
 
 #define  uint unsigned int
-#define  udouble unsigned double
 #define  ushort unsigned short
 #define  ulong unsigned long
 
@@ -15,6 +14,8 @@
 #define CONTINUE 0
 #define BREAK 1
 #define RETURN 2
+
+#define MAX_LENGTH 1024
 
 #define MATH_PI 3.1415926
 
@@ -38,6 +39,7 @@ typedef enum _CAL_TYPE{
 	CAL_NUMBER,   //数值
 	CAL_OPERATE,  // 运算符
 	CAL_BRACKET,  // 括号符
+    CAL_PUNCK,   //逗号
 	CAL_END,   // 结束符
 	CAL_ERROR,  //错误码
 }CAL_TYPE;
@@ -52,6 +54,8 @@ typedef enum _cal_operater_type {
     OP_SIN,
     OP_COS,
     OP_TAN,
+    OP_POW,
+    OP_SUM,
     
     OP_ERROR,
 }CAL_OPERATOR_TYPE;
@@ -61,7 +65,6 @@ typedef struct _cal_Node {
 		double value;  //数字
 		CAL_OPERATOR_TYPE operater;  //运算操作
 		char bracket;  //
-		char punck;
 	};
 	CAL_TYPE calType;
 }calNode;

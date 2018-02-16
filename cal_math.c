@@ -20,21 +20,32 @@ void println(calNode data) {
         cal_operater_node* opInfo = getCalOperationDesc(data.operater);
         printf("%s  ",opInfo->opeDesprition);
     }
+    
+    if(data.calType == CAL_PUNCK) {
+        printf(", ");
+    }
 }
 
 //向栈的底部查找前一个操作符，如果查到括号或者逗号则停止，查到运算操作返回
 int serchOperator(pNode node) {
     ASSERT_RETURN(node != NULL, BREAK);
     //寻找操作符
-    if((node->data).calType == CAL_BRACKET)
+    if((node->data).calType == CAL_BRACKET || (node->data).calType == CAL_PUNCK)
         return BREAK;
     if((node->data).calType == CAL_OPERATE)
         return RETURN;
     return CONTINUE;
 }
 
-
 pStack math_pStack = NULL;
+
+double sum(double* datas,uint length) {
+    double temp = 0.0;
+    for(int index = 0;index < length;index ++ ) {
+        temp += datas[index];
+    }
+    return temp;
+}
 
 bool mathProcBaseCaculate(double data1,double data2,CAL_OPERATOR_TYPE op,double* value) {
     if(op == OP_ADD)
@@ -67,7 +78,7 @@ bool mathProcBaseCaculate(double data1,double data2,CAL_OPERATOR_TYPE op,double*
     
     return true;
 }
-
+//一个参数的函数运算
 bool mathProcFunctionCalculate(double data,CAL_OPERATOR_TYPE op,double* value) {
     if(op == OP_SIN)
         //弧度转化成角度
@@ -78,6 +89,19 @@ bool mathProcFunctionCalculate(double data,CAL_OPERATOR_TYPE op,double* value) {
         *value = tan(data / 180 * MATH_PI);
     else
         ASSERT_RETURN(0, false);
+    return true;
+}
+
+//多个参数的函数的运算，将结果存储到datas第0位
+bool mathProcFunctionCalculateByList(double* datas,uint length,CAL_OPERATOR_TYPE op) {
+    ASSERT_RETURN(length > 0 && datas != NULL, false);
+    if(op == OP_POW) {
+        ASSERT_RETURN(length == 2, false);
+        *datas = pow(datas[1], datas[0]);
+    }
+    if(op == OP_SUM) {
+        *datas = sum(datas, length);
+    }
     return true;
 }
 
@@ -106,7 +130,7 @@ bool mathProcOperate() {
         ASSERT_RETURN(mathProcBaseCaculate(data1,data2,op,&(pushData.value)), false);
     }
     
-    //函数运算
+    //普通函数运算  sin cos
     else if(calOpInfo->level == 4) {
         ASSERT_RETURN(mathProcFunctionCalculate(data1,op,&(pushData.value)),false);
     }
@@ -121,25 +145,42 @@ bool mathProcOperate() {
 bool mathProcBranket(char branket) {
     calNode popData;
     calNode pushData;
-    double data;
+    double datas[64];
+    bool punckFlag = false;
+    uint index = 1;
     
     ASSERT_RETURN(popStack(math_pStack, &popData), false);
     ASSERT_RETURN(popData.calType == CAL_NUMBER, false);
-    data = popData.value;
+    datas[0] = popData.value;
     
-    ASSERT_RETURN(popStack(math_pStack, &popData), false);
-    ASSERT_RETURN(popData.calType == CAL_BRACKET, false);
+    //取出数据，直到取出前括号
+    do {
+        ASSERT_RETURN(popStack(math_pStack, &popData), false);
+        if(popData.calType == CAL_BRACKET) {
+            if(branket == ')') {
+                ASSERT_RETURN(popData.bracket == '(', false);
+            } else {
+                ASSERT_RETURN(0, false);
+            }
+        }
+        
+        //如果当前此节点存储的为逗号，则再次出栈，取出数据,并且要取出括号前的函数，将punckFlag置位1
+        else if(popData.calType == CAL_PUNCK) {
+            punckFlag = true;
+            
+            ASSERT_RETURN(popStack(math_pStack, &popData), false);
+            ASSERT_RETURN(popData.calType == CAL_NUMBER, false);
+            datas[index ++] = popData.value;
+        }
+    }while(popData.calType != CAL_BRACKET);
     
-    if(branket == ')') {
-        ASSERT_RETURN(popData.bracket == '(', false);
-    } else if(branket == ']') {
-        ASSERT_RETURN(popData.bracket == '[', false);
-    } else {
-        ASSERT_RETURN(0, false);
+    if(punckFlag) {
+        ASSERT_RETURN(popStack(math_pStack, &popData), false);
+        ASSERT_RETURN(popData.calType == CAL_OPERATE, false);
+        ASSERT_RETURN(mathProcFunctionCalculateByList(datas,index,popData.operater),false);
     }
-    
     pushData.calType = CAL_NUMBER;
-    pushData.value = data;
+    pushData.value = datas[0];
     ASSERT_RETURN(pushStack(math_pStack, pushData), false);
     
     return true;
@@ -171,9 +212,9 @@ bool mathProcCalNode(const calNode* data){
         pushStack(math_pStack, *data);
     }
     else if(data->calType == CAL_BRACKET) {
-        if(data->bracket == '(' || data->bracket == '[') {
-            pushStack(math_pStack, *data);
-        } else if(data->bracket == ')' || data->bracket == ']') {
+        if(data->bracket == '(') {
+            ASSERT_RETURN(pushStack(math_pStack, *data),false);
+        } else if(data->bracket == ')') {
             while(searchStack(math_pStack, serchOperator) != NULL) {
                 ASSERT_RETURN(mathProcOperate(), false);
             }
@@ -184,9 +225,18 @@ bool mathProcCalNode(const calNode* data){
         
     }
     
+    else if(data->calType == CAL_PUNCK) {
+        while(searchStack(math_pStack, serchOperator) != NULL) {
+            ASSERT_RETURN(mathProcOperate(), false);
+//            transferStack(math_pStack, println);
+        }
+        pushStack(math_pStack, *data);
+    }
+    
     else if(data->calType == CAL_END) {
         while(searchStack(math_pStack, serchOperator) != NULL) {
             ASSERT_RETURN(mathProcOperate(), false);
+            
         }
     }
 //    transferStack(math_pStack, println);

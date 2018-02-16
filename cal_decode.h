@@ -10,7 +10,7 @@
 #define _CAL_DECODE_H_
 #include "cal_base.h"
 
-bool decodeString(const char* string);
+bool decodeString(char* string);
 bool decodeResult(double* result);
 
 #endif /* cal_decode_h */

@@ -1,1 +1,1 @@
-gcc cal_base.c cal_decode.c cal_stack.c main.c cal_math.c -o calculate
+gcc cal_base.c cal_decode.c cal_stack.c main.c cal_math.c -o calculate -lm

@@ -5,7 +5,8 @@
  1:  +-
  2:  * /
  3:  %^
- 4:  函数运算
+ 4:  普通函数运算，一个参数 sin(45)
+ 5:  函数运算，多个参数，如 pow(2.3,6)
 */
 cal_operater_node g_calOperationList[OP_ERROR] = {
     {
@@ -33,8 +34,15 @@ cal_operater_node g_calOperationList[OP_ERROR] = {
         4,  "cos",
     },
     {
-        4,  "tan"
-    }
+        4,  "tan",
+    },
+    
+    {
+        5,  "pow",
+    },
+    {
+        5,  "sum",
+    },
 };
 
 

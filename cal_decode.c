@@ -2,15 +2,50 @@
 #include "cal_base.h"
 #include "cal_math.h"
 #include <string.h>
+#include <stdlib.h>
+
+//解码中有几个缺陷，大小写和空格，并且首位为-号或者+号无法处理，在这里预处理一下
+char* stringPreHandle(char* string) {
+    char* tempString = (char*)malloc(MAX_LENGTH + 1);
+    memset(tempString, MAX_LENGTH, 0);
+    ulong index = 0;
+    
+    for(ulong i = 0;i<strlen(string) && index < MAX_LENGTH;i++) {
+        if(string[i] >= 'A' && string[i] <= 'Z') {
+            //大写转小写
+            tempString[index++] = string[i] - 'A' + 'a';
+        } else if(string[i] == ' ') {
+            //去除空格
+            continue;
+        } else if(i == 0 || string[i] == '(' || string[i] == ',') {
+            if(string[i] == '-') {
+                tempString[index++] = '0';
+                tempString[index++] = '-';
+            } else if (string[i] == '+') {
+                continue;
+            } else {
+                tempString[index++] = string[i] ;
+            }
+            
+        } else {
+            tempString[index++] = string[i];
+        }
+    }
+    tempString[index] = '\0';
+    return tempString;
+}
 
 CAL_TYPE decodeType(const char c) {
 	
 	if((c >= '0' && c <= '9') || c == '.') {
 		return CAL_NUMBER;
 	}
-	if(c == '(' || c == ')' || c == '[' || c == ']') {
+	else if(c == '(' || c == ')') {
 		return CAL_BRACKET;
 	}
+    else if(c == ',') {
+        return CAL_PUNCK;
+    }
 	return CAL_OPERATE;
 }
 
@@ -56,13 +91,16 @@ double decodeNumber(const char* start,uint* index) {
 	return Interger + Pointer;
 }
 //解码成功返回true
-bool decodeString(const char* string) {
-	ASSERT_RETURN(string != NULL, false);
+bool decodeString(char* str) {
+	ASSERT_RETURN(str != NULL, false);
 	
-	ulong maxLength = strlen(string);
+	
 	uint decodeLength = 0;
 	calNode data;
-	
+    
+    char* string = stringPreHandle(str);
+    ulong maxLength = strlen(string);
+    
 	while(*(string + decodeLength) != '\0') {
 		
 		data.calType = decodeType(string[decodeLength]);
@@ -80,12 +118,18 @@ bool decodeString(const char* string) {
             data.bracket = *(string + decodeLength);
             decodeLength += 1;
         }
+        
+        else if(data.calType == CAL_PUNCK) {
+            decodeLength += 1;
+        }
+        
         if(!mathProcCalNode(&data)) {
             ASSERT_RETURN(0, false);
         }
 		ASSERT_RETURN(decodeLength <= maxLength, false);
 	}
     
+    //已经结束，对结束的处理
     data.calType = CAL_END;
     if(!mathProcCalNode(&data)) {
         ASSERT_RETURN(0, false);
