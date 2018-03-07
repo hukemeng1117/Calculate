@@ -3,9 +3,9 @@
 
 #include <stdio.h>
 
-#define  uint unsigned int
-#define  ushort unsigned short
-#define  ulong unsigned long
+typedef  unsigned int uint;
+typedef  unsigned short ushort;
+typedef  unsigned long ulong;
 
 #define bool int
 #define false 0
@@ -18,6 +18,7 @@
 #define MAX_LENGTH 1024
 
 #define MATH_PI 3.1415926
+#define MATH_E 2.718281828459
 
 //#define ASSERT_RETURN(condition) \
 //do { \
@@ -51,11 +52,21 @@ typedef enum _cal_operater_type {
     OP_DIVISE,
     OP_INVOLUTION,
     OP_MOD,
+    
+    OP_SINH,
+    OP_COSH,
+    OP_TANH,
     OP_SIN,
     OP_COS,
     OP_TAN,
+    OP_LOG10,
+    OP_LN,
+    
+    OP_LOG,
     OP_POW,
     OP_SUM,
+    OP_AVG,
+    OP_VARP,
     
     OP_ERROR,
 }CAL_OPERATOR_TYPE;
@@ -64,7 +75,7 @@ typedef struct _cal_Node {
 	union {
 		double value;  //数字
 		CAL_OPERATOR_TYPE operater;  //运算操作
-		char bracket;  //
+		char bracket;  //括号
 	};
 	CAL_TYPE calType;
 }calNode;

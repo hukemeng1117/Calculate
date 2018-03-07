@@ -8,6 +8,29 @@
  4:  普通函数运算，一个参数 sin(45)
  5:  函数运算，多个参数，如 pow(2.3,6)
 */
+
+//typedef enum _cal_operater_type {
+//    OP_ADD,
+//    OP_PLUS,
+//    OP_MULTIPLY,
+//    OP_DIVISE,
+//    OP_INVOLUTION,
+//    OP_MOD,
+//
+//    OP_SINH,
+//    OP_COSH,
+//    OP_TANH,
+//    OP_SIN,
+//    OP_COS,
+//    OP_TAN,
+//    OP_LOG10,
+//    OP_LN,
+//
+//    OP_POW,
+//    OP_SUM,
+//
+//    OP_ERROR,
+//}CAL_OPERATOR_TYPE;
 cal_operater_node g_calOperationList[OP_ERROR] = {
     {
         1,  "+",
@@ -25,7 +48,16 @@ cal_operater_node g_calOperationList[OP_ERROR] = {
         3,  "^",
     },
     {
-        3,  "%",
+        3,  "%", 
+    },
+    {
+        4,  "sinh",
+    },
+    {
+        4,  "cosh",
+    },
+    {
+        4,  "tanh",
     },
     {
         4,  "sin",
@@ -38,10 +70,26 @@ cal_operater_node g_calOperationList[OP_ERROR] = {
     },
     
     {
+        4,  "log10",
+    },
+    {
+        4,  "ln",
+    },
+    
+    {
+        5,  "log",
+    },
+    {
         5,  "pow",
     },
     {
         5,  "sum",
+    },
+    {
+        5,  "avg",
+    },
+    {
+        5,  "varp",
     },
 };
 

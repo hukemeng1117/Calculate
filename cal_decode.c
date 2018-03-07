@@ -104,7 +104,7 @@ bool decodeString(char* str) {
 	while(*(string + decodeLength) != '\0') {
 		
 		data.calType = decodeType(string[decodeLength]);
-		ASSERT_RETURN(data.calType != CAL_ERROR, false);
+
 		if(data.calType == CAL_NUMBER) {
 			data.value = decodeNumber(string + decodeLength, &decodeLength);
 		}
