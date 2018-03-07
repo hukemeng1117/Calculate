@@ -89,7 +89,6 @@ bool mathProcBaseCaculate(double data1,double data2,CAL_OPERATOR_TYPE op,double*
 }
 //一个参数的函数运算
 bool mathProcFunctionCalculate(double data,CAL_OPERATOR_TYPE op,double* value) {
-    printf("%d \n",op);
     switch (op) {
         case OP_SIN:
             *value = sin(data / 180 * MATH_PI);
@@ -112,11 +111,9 @@ bool mathProcFunctionCalculate(double data,CAL_OPERATOR_TYPE op,double* value) {
             break;
         case OP_LOG10:
             *value = log10(data);
-            printf("%f",*value);
             break;
         case OP_LN:
             *value = log(data);
-            printf("%f",*value);
             break;
         default:
             ASSERT_RETURN(0, false);
@@ -165,7 +162,6 @@ bool mathProcOperate() {
     op = popData.operater;
     
     cal_operater_node* calOpInfo = getCalOperationDesc(op);
-    printf("%d \n",op);
     //基本运算
     if(calOpInfo->level <= 3) {
         ASSERT_RETURN(popStack(math_pStack, &popData), false);
