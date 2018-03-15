@@ -1,10 +1,7 @@
 //
 //  cal_math.c
 //  Calculate
-//
-//  Created by 尚立 on 2018/2/15.
-//  Copyright © 2018年 尚立. All rights reserved.
-//
+
 
 #include "cal_math.h"
 #include "cal_base.h"
